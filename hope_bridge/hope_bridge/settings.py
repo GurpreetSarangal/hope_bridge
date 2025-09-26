@@ -12,10 +12,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
-from dotenv import load_dotenv
-import os
 
-load_dotenv()  # loads variables from .env
+import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()  # loads variables from .env if python-dotenv is installed
+except Exception:
+    # python-dotenv not installed; proceed using environment variables only
+    pass
 
 MONGO_USER = os.getenv("MONGO_USER")
 MONGO_PASSWORD = os.getenv("MONGO_PASSWORD")
@@ -46,10 +50,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'alerts',
+    
+    'alerts',          # ✅ add your app here
+    'corsheaders',     # ✅ for CORS
 ]
 
+AUTH_USER_MODEL = 'alerts.User'
+
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -57,7 +66,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
+
+
+CORS_ALLOW_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'hope_bridge.urls'
 
@@ -81,20 +94,25 @@ WSGI_APPLICATION = 'hope_bridge.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'djongo',
-#         'NAME': MONGO_DB, # Your MongoDB database name
-#         'CLIENT': {
-#             'host': 'mongodb://localhost:27017/', # Default MongoDB host and port
-#             'username': MONGO_USER, 
-#             'password': MONGO_PASSWORD,
-#         }
+#         'NAME': 'hope_bridge',
+#         'HOST': 'localhost',  # ✅ must be correct
+#         'PORT': 27017,        # default MongoDB port
 #     }
 # }
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+
+
+# settings.py
+ALLOWED_HOSTS = ["*", "10.65.60.252", "127.0.0.1", "localhost"]
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

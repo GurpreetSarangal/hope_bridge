@@ -1,0 +1,7 @@
+Startup log created: 2025-09-26T10:06:01.609113Z
+MONGO_URI=mongodb://127.0.0.1:27017/
+MONGO_DB=hope_bridge
+
+--- process import at 2025-09-26T10:06:08.329928Z ---
+MONGO_URI=mongodb://127.0.0.1:27017/
+MONGO_DB=hope_bridge
